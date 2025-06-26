@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/stayplace?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    username: Test
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  thymeleaf:
+    cache: false
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG # 실행되는 SQL 쿼리 로깅
+        type:
+          descriptor:
+            sql: TRACE # SQL 파라미터 로깅
+  org.springframework.web: DEBUG
