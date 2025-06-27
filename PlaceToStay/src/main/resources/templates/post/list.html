@@ -93,6 +93,12 @@
 
 <h1>게시판 목록</h1>
 
+<!-- 검색 폼 -->
+<form th:action="@{/posts}" method="get" style="margin-bottom: 20px;">
+    <input type="text" name="keyword" th:value="${keyword}" placeholder="제목 검색" style="padding: 8px; width: 250px;">
+    <button type="submit" style="padding: 8px 12px;">검색</button>
+</form>
+
 <div th:if="${message}" class="message" th:text="${message}"></div>
 
 <a href="/posts/new" class="btn-new-post">새 글 작성</a>
@@ -119,6 +125,32 @@
         </tr>
     </tbody>
 </table>
+
+<!-- 페이지네이션 -->
+<div style="margin-top: 20px; text-align: center;">
+    <span th:if="${posts.hasPrevious()}">
+        <a th:href="@{/posts(page=${posts.number - 1}, keyword=${keyword})}" style="margin-right: 10px;">&laquo; 이전</a>
+    </span>
+
+    <span th:each="i : ${#numbers.sequence(0, posts.totalPages - 1)}">
+        <a th:href="@{/posts(page=${i}, keyword=${keyword})}"
+           th:text="${i + 1}"
+           th:classappend="${i == posts.number} ? ' current-page' : ''"
+           style="margin: 0 5px;">1</a>
+    </span>
+
+    <span th:if="${posts.hasNext()}">
+        <a th:href="@{/posts(page=${posts.number + 1}, keyword=${keyword})}" style="margin-left: 10px;">다음 &raquo;</a>
+    </span>
+</div>
+
+<style>
+    .current-page {
+        font-weight: bold;
+        text-decoration: underline;
+    }
+</style>
+
 
 </body>
 </html>
