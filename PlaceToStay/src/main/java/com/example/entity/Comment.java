@@ -42,5 +42,10 @@ public class Comment {
     @Column(name = "is_selected", nullable = false)
     private Boolean isSelected = false;
 
+    @Transient
+    private long likeCount;
+
+    @Transient
+    private long dislikeCount;
     // Getter, Setter, 생성자 등 생략
 }

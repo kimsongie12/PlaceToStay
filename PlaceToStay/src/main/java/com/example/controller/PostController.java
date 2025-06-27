@@ -80,12 +80,17 @@ public class PostController {
 		Post post = postService.getPostById(id);
 		comment.setPost(post);
 
-		// 로그인 사용자 정보 필요 – 현재는 더미 memberId로 대체
-		Member member = memberService.getById(1); // 임시 로그인 사용자
-		comment.setMember(member);
+		// 로그인 사용자 정보 필요 – 현재는 더미 member 객체로 대체
+	    Member dummyMember = new Member();
+	    dummyMember.setMemberId(1); // DB에 없는 경우 임의 값
+	    dummyMember.setEmail("test@example.com");
+	    dummyMember.setNickname("테스트유저");
+	    // dummyMember.setUsername("testuser"); // ← username 필드는 DB에 없으니 사용 금지 또는 제거
 
-		commentService.saveComment(comment);
-		return "redirect:/posts/" + id;
+	    comment.setMember(dummyMember);
+
+	    commentService.saveComment(comment);
+	    return "redirect:/posts/" + id;
 	}
 
 	@GetMapping("/{id}/edit")

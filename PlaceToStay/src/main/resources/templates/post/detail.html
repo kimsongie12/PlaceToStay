@@ -107,13 +107,35 @@
 			<strong th:text="${comment.member.nickname}">작성자</strong>:
 			<span th:text="${comment.content}">내용</span>
 			<small th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">날짜</small>
+			<!-- 👍 좋아요 / 👎 싫어요 버튼 -->
+			<div style="margin-top: 5px;">
+				<form
+					th:action="@{/posts/{postId}/comments/{commentId}/react(postId=${post.postId}, commentId=${comment.commentId})}"
+					method="post" style="display:inline;">
+					<input type="hidden" name="reactionType" value="LIKE" />
+					<button type="submit">👍</button>
+				</form>
+				<span th:text="${comment.likeCount}">0</span>
 
+				<form
+					th:action="@{/posts/{postId}/comments/{commentId}/react(postId=${post.postId}, commentId=${comment.commentId})}"
+					method="post" style="display:inline;">
+					<input type="hidden" name="reactionType" value="DISLIKE" />
+					<button type="submit">👎</button>
+				</form>
+				<span th:text="${comment.dislikeCount}">0</span>
+			</div>
+		<!-- 수정/삭제 -->
 			<span>
-			    <a th:href="@{/posts/{postId}/comments/{commentId}/edit(postId=${post.postId}, commentId=${comment.commentId})}">수정</a> |
-			    <form th:action="@{/posts/{postId}/comments/{commentId}/delete(postId=${post.postId}, commentId=${comment.commentId})}" method="post" style="display:inline;">
-			      <button type="submit" onclick="return confirm('댓글을 삭제하시겠습니까?');">삭제</button>
-			    </form>
-			  </span>
+				<a
+					th:href="@{/posts/{postId}/comments/{commentId}/edit(postId=${post.postId}, commentId=${comment.commentId})}">수정</a>
+				|
+				<form
+					th:action="@{/posts/{postId}/comments/{commentId}/delete(postId=${post.postId}, commentId=${comment.commentId})}"
+					method="post" style="display:inline;">
+					<button type="submit" onclick="return confirm('댓글을 삭제하시겠습니까?');">삭제</button>
+				</form>
+			</span>
 		</li>
 	</ul>
 

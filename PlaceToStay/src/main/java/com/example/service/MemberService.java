@@ -1,5 +1,6 @@
 package com.example.service;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.example.entity.Member;
@@ -10,10 +11,17 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class MemberService {
+	
     private final MemberRepository memberRepository;
 
     public Member getById(Integer id) {
         return memberRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("해당 회원이 없습니다. id=" + id));
     }
+    
+//    public Member findByUsername(String username) {
+//        return memberRepository.findByUsername(username)
+//            .orElseThrow(() -> new UsernameNotFoundException("해당 유저 없음"));
+//    }
+    
 }
