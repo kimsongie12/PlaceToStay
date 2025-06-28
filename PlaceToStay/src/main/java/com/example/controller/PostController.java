@@ -4,6 +4,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,8 +62,17 @@ public class PostController {
 
 	@PostMapping
 	public String create(@ModelAttribute Post post) {
-		postService.savePost(post);
-		return "redirect:/posts";
+	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    String email = authentication.getName();
+
+	    Member member = memberService.findByEmail(email);
+	    if (member == null) {
+	        throw new RuntimeException("로그인 회원 정보가 없습니다.");
+	    }
+
+	    post.setMember(member);
+	    postService.savePost(post);
+	    return "redirect:/posts";
 	}
 
 	@GetMapping("/{id}")
@@ -77,17 +88,17 @@ public class PostController {
 
 	@PostMapping("/{id}/comments")
 	public String addComment(@PathVariable Integer id, @ModelAttribute Comment comment) {
-		Post post = postService.getPostById(id);
-		comment.setPost(post);
+	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    String email = authentication.getName();
 
-		// 로그인 사용자 정보 필요 – 현재는 더미 member 객체로 대체
-	    Member dummyMember = new Member();
-	    dummyMember.setMemberId(1); // DB에 없는 경우 임의 값
-	    dummyMember.setEmail("test@example.com");
-	    dummyMember.setNickname("테스트유저");
-	    // dummyMember.setUsername("testuser"); // ← username 필드는 DB에 없으니 사용 금지 또는 제거
+	    Member member = memberService.findByEmail(email);
+	    if (member == null) {
+	        throw new RuntimeException("로그인 회원 정보가 없습니다.");
+	    }
 
-	    comment.setMember(dummyMember);
+	    Post post = postService.getPostById(id);
+	    comment.setPost(post);
+	    comment.setMember(member);
 
 	    commentService.saveComment(comment);
 	    return "redirect:/posts/" + id;
